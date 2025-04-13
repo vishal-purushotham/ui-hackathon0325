@@ -1,78 +1,78 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowUpIcon, ChatBubbleOvalLeftEllipsisIcon, EyeIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { UpvoteIcon, ChatIcon, EyeIcon } from './Icons';
 
-interface Thread {
-  id: string | number;
+type ThreadItemProps = {
+  id: string;
   title: string;
   author: {
-    username: string;
     id: string;
-    avatarUrl?: string;
+    username: string;
+    avatar?: string;
   };
-  createdAt: string;
+  timestamp: string;
   replyCount: number;
   viewCount: number;
   upvoteCount: number;
-}
+  categoryId: string;
+};
 
-interface ThreadItemProps {
-  thread: Thread;
-}
-
-const ThreadItem: React.FC<ThreadItemProps> = ({ thread }) => {
+export function ThreadItem({
+  id,
+  title,
+  author,
+  timestamp,
+  replyCount,
+  viewCount,
+  upvoteCount,
+  categoryId,
+}: ThreadItemProps) {
   return (
-    <div className="bg-white p-4 border-b border-border hover:bg-secondary/50 transition-colors">
-      <div className="flex items-center justify-between gap-4">
-        {/* Left side: Title and Author Info */}
-        <div className="flex-1 min-w-0"> 
-          <Link 
-            to={`/thread/${thread.id}`}
-            className="font-medium text-lg text-text-primary hover:text-primary transition-colors block truncate"
-          >
-            {thread.title}
+    <div className="bg-white p-4 border-b border-border hover:bg-secondary transition-colors">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <Link href={`/category/${categoryId}/thread/${id}`}>
+            <h3 className="font-medium text-lg text-text hover:text-primary transition-colors">
+              {title}
+            </h3>
           </Link>
-          <div className="flex items-center gap-2 text-sm text-text-subtle mt-1">
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <Link to={`/user/${thread.author.id}`} className="flex items-center gap-1 hover:underline">
-                <span 
-                  className="w-5 h-5 rounded-full bg-gray-300 inline-block align-middle"
-                  style={thread.author.avatarUrl ? { backgroundImage: `url(${thread.author.avatarUrl})`, backgroundSize: 'cover' } : {}}
-                  role="img"
-                  aria-label={`${thread.author.username}'s avatar`}
-                ></span>
-                <span>{thread.author.username}</span>
-              </Link>
-            </div>
+          <div className="flex items-center gap-2 text-sm text-subtle-text mt-1">
+            <Link href={`/profile/${author.id}`} className="flex items-center gap-1 hover:text-primary transition-colors">
+              <span className="w-5 h-5 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center text-xs text-primary font-medium">
+                {author.avatar ? (
+                  <img src={author.avatar} alt={author.username} className="w-full h-full object-cover" />
+                ) : (
+                  author.username.charAt(0).toUpperCase()
+                )}
+              </span>
+              <span>{author.username}</span>
+            </Link>
             <span>•</span>
-            <span className="flex-shrink-0">{thread.createdAt}</span>
+            <span>{timestamp}</span>
           </div>
         </div>
-
-        {/* Right side: Stats and Upvote */}
-        {/* ... rest of the component ... */}
-        <div className="flex items-center gap-4 text-sm text-text-subtle flex-shrink-0">
-          <div className="hidden sm:flex items-center gap-1" title={`${thread.replyCount} replies`}>
-            <ChatBubbleOvalLeftEllipsisIcon className="w-4 h-4" />
-            <span>{thread.replyCount}</span>
+        
+        <div className="flex items-center gap-4 text-sm text-subtle-text">
+          <div className="flex items-center gap-1">
+            <ChatIcon className="h-4 w-4" />
+            <span>{replyCount}</span>
           </div>
-          <div className="hidden sm:flex items-center gap-1" title={`${thread.viewCount} views`}>
-            <EyeIcon className="w-4 h-4" />
-            <span>{thread.viewCount}</span>
+          
+          <div className="flex items-center gap-1">
+            <EyeIcon className="h-4 w-4" />
+            <span>{viewCount}</span>
           </div>
-          <button 
-            className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors text-text-subtle hover:text-primary"
-            aria-label={`Upvote thread (currently ${thread.upvoteCount} upvotes)`}
-            title="Upvote"
-          >
-            <ArrowUpIcon className="w-4 h-4" />
-            <span className="text-sm font-medium">{thread.upvoteCount}</span>
-          </button>
+          
+          <div className="flex items-center gap-1">
+            <button 
+              className="text-subtle-text hover:text-primary transition-colors" 
+              aria-label="Upvote"
+            >
+              <UpvoteIcon className="h-4 w-4" />
+            </button>
+            <span>{upvoteCount}</span>
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default ThreadItem;
-export type { Thread };
+} 

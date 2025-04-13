@@ -1,98 +1,91 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { MagnifyingGlassIcon, UserCircleIcon, Bars3Icon } from '@heroicons/react/24/outline'; // Example icons
+'use client';
 
-const Header: React.FC = () => {
-  // Placeholder state for mobile menu
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(''); // State for search input
-  const navigate = useNavigate(); // Hook for navigation
+import Link from 'next/link';
+import { SearchIcon, MenuIcon, UserIcon, BellIcon } from './Icons';
+import { useState } from 'react';
 
-  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
+export function Header() {
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return; // Don't search if query is empty
-    
-    console.log('Search submitted:', searchQuery);
-    // TODO: Implement actual search logic
-    // Option 1: Navigate to a dedicated search results page
-    navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-    
-    // Option 2: Trigger an API call and display results in a dropdown (more complex)
-    
-    setSearchQuery(''); // Optional: Clear search bar after submit
-    setIsMobileMenuOpen(false); // Close mobile menu if open
+    if (searchQuery.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+    }
   };
-
+  
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-border">
-      <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-10 bg-white shadow-sm border-b border-border">
+      <div className="container mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold text-primary">
-          ForumLogo
-        </Link>
-
-        {/* Search Form (Desktop) */}
-        <form onSubmit={handleSearchSubmit} className="hidden md:flex flex-1 max-w-md mx-4">
-          <div className="relative w-full">
+        <div className="flex items-center">
+          <Link href="/" className="font-bold text-xl text-primary">
+            Forum
+          </Link>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex ml-8 space-x-6">
+            <Link href="/" className="text-text hover:text-primary transition-colors font-medium">
+              Home
+            </Link>
+            <div className="relative group">
+              <button className="text-text hover:text-primary transition-colors font-medium flex items-center gap-1">
+                Categories
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1 h-4 w-4">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                <Link href="/category/general" className="block px-4 py-2 text-sm text-text hover:bg-secondary">
+                  General Discussion
+                </Link>
+                <Link href="/category/announcements" className="block px-4 py-2 text-sm text-text hover:bg-secondary">
+                  Announcements
+                </Link>
+                <Link href="/category/help" className="block px-4 py-2 text-sm text-text hover:bg-secondary">
+                  Help & Support
+                </Link>
+              </div>
+            </div>
+            <Link href="/members" className="text-text hover:text-primary transition-colors font-medium">
+              Members
+            </Link>
+          </nav>
+        </div>
+        
+        {/* Search Bar */}
+        <div className="hidden md:block flex-1 max-w-md mx-4">
+          <form onSubmit={handleSearchSubmit} className="relative">
             <input
               type="search"
+              placeholder="Search..."
+              className="w-full px-4 py-2 pl-10 pr-4 rounded-full border border-border bg-secondary focus:outline-none focus:ring-2 focus:ring-primary/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search forums..."
-              className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-              aria-label="Search forums"
             />
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-subtle" />
-          </div>
-        </form>
-
-        {/* User Controls (Desktop) */}
-        <div className="hidden md:flex items-center gap-4">
-          {/* Placeholder for Category Dropdown */}
-          <button className="text-text-subtle hover:text-text-primary">Categories</button>
-          <button className="text-text-subtle hover:text-text-primary">
-            <UserCircleIcon className="h-6 w-6" />
-          </button>
-          {/* Login/Register or User Profile Link */} 
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-text-subtle hover:text-text-primary"
-            aria-label="Toggle menu"
-          >
-            <Bars3Icon className="h-6 w-6" />
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu (Conditional Rendering) */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-border px-4 py-2">
-          {/* Mobile Search Form */}
-          <form onSubmit={handleSearchSubmit} className="relative mb-2">
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search forums..."
-              className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-              aria-label="Search forums"
-            />
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-subtle" />
-            {/* Hidden submit button to allow enter key submission */}
-            <button type="submit" className="hidden">Search</button> 
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-subtle-text">
+              <SearchIcon className="h-5 w-5" />
+            </div>
+            <button type="submit" className="sr-only">Search</button>
           </form>
-          {/* Mobile Links */} 
-          <a href="#" className="block py-2 text-text-primary hover:bg-secondary">Categories</a>
-          <a href="#" className="block py-2 text-text-primary hover:bg-secondary">Profile</a>
-          {/* Add more mobile links as needed */}
         </div>
-      )}
+        
+        {/* User Controls */}
+        <div className="flex items-center space-x-4">
+          <Link href="/search" className="p-2 text-subtle-text hover:text-primary rounded-full hover:bg-secondary transition-colors md:hidden">
+            <SearchIcon className="h-5 w-5" />
+          </Link>
+          <button className="p-2 text-subtle-text hover:text-primary rounded-full hover:bg-secondary transition-colors">
+            <BellIcon className="h-5 w-5" />
+          </button>
+          <Link href="/profile/user-1" className="p-2 text-subtle-text hover:text-primary rounded-full hover:bg-secondary transition-colors">
+            <UserIcon className="h-5 w-5" />
+          </Link>
+          <button className="md:hidden p-2 text-subtle-text hover:text-primary rounded-full hover:bg-secondary transition-colors">
+            <MenuIcon className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
     </header>
   );
-};
-
-export default Header; 
+} 

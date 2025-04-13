@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -10,24 +11,59 @@ export default {
         primary: '#3b82f6',
         secondary: '#f3f4f6',
         accent: '#10b981',
-        'text-primary': '#1f2937', // Renamed to avoid conflict with text utility
-        'text-subtle': '#6b7280', // Renamed to avoid conflict
+        text: '#1f2937',
+        'subtle-text': '#6b7280',
         border: '#e5e7eb',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'], // Set Inter as the default sans-serif font
-        heading: ['Inter', 'sans-serif'], // Explicitly define heading font if needed later
+        sans: ['Inter', 'sans-serif'],
       },
-      // Define breakpoints if different from default sm, md, lg, xl, 2xl
-      // screens: {
-      //   'sm': '640px',
-      //   'md': '768px',
-      //   'lg': '1024px',
-      //   'xl': '1280px',
-      // }
+      fontSize: {
+        base: '16px',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            h1: {
+              fontWeight: 700,
+            },
+            h2: {
+              fontWeight: 700,
+            },
+            h3: {
+              fontWeight: 600,
+            },
+            h4: {
+              fontWeight: 600,
+            },
+            a: {
+              color: '#3b82f6',
+              '&:hover': {
+                color: '#2563eb',
+              },
+            },
+            blockquote: {
+              borderLeftColor: '#e5e7eb',
+            },
+            code: {
+              color: '#111827',
+              backgroundColor: '#f3f4f6',
+              padding: '0.1em 0.25em',
+              borderRadius: '0.25rem',
+              fontWeight: '500',
+            },
+            pre: {
+              backgroundColor: '#1f2937',
+              color: '#f3f4f6',
+              overflow: 'auto',
+              borderRadius: '0.375rem',
+            },
+          },
+        },
+      },
     },
   },
   plugins: [
-    require('@tailwindcss/typography'), // Add typography plugin
+    require('@tailwindcss/typography'),
   ],
 } 
